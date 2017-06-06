@@ -83,8 +83,8 @@ const mutation = new GraphQLObjectType({
                 age: { type: new GraphQLNonNull(GraphQLInt) },
                 companyId: { type: GraphQLString }
             },
-            resolve(parentValue, { firstName, age }) {
-                return axios.post(`http://localhost:3000/users`, { firstName, age })
+            resolve(parentValue, { firstName, age, companyId }) {
+                return axios.post(`http://localhost:3000/users`, { firstName, age, companyId })
                         .then(res => res.data); 
             }
         },
@@ -95,6 +95,19 @@ const mutation = new GraphQLObjectType({
             },
             resolve(parentValue, { userId }) {
                 return axios.delete(`http://localhost:3000/users/${userId}`)
+                        .then(res => res.data); 
+            }
+        },
+        editUser: {
+            type: UserType,
+            args: {
+                userId: { type: new GraphQLNonNull(GraphQLString) },
+                firstName: { type: GraphQLString },
+                age: { type: GraphQLInt },
+                companyId: { type: GraphQLString }
+            },
+            resolve(parentValue, args) {
+                return axios.patch(`http://localhost:3000/users/${args.userId}`, args)
                         .then(res => res.data); 
             }
         }
